@@ -1,10 +1,16 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -51,5 +57,14 @@ public class GPSService {
 		gps.setWaypoints(wayPointRepository.findByGpsId(id));
 		gps.setTracks(trackRepository.findByGpsId(id));
 		return gps;
+	}
+	
+	public List<GPS> findAllGPS(Integer pageNo, Integer pageSize, Sort sort) {
+		Pageable pageable = new PageRequest(pageNo, pageSize, sort);
+		Page<GPS> result = gpsRepository.findAll(pageable);
+		if(result.hasContent()) {
+			return result.getContent();
+		}
+		return new ArrayList<>();
 	}
 }

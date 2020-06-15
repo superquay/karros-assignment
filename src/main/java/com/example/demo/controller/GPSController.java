@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
-import java.util.logging.Logger;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +22,6 @@ import com.example.demo.service.GPXParser;
 @RestController
 public class GPSController {
 	
-	private static final Logger logger = Logger.getLogger(GPSController.class.getName());
 	@Autowired
 	GPSService gpsService;
 	
@@ -44,5 +45,13 @@ public class GPSController {
 	@GetMapping("/gps/{id}")
 	public ResponseEntity<GPS> getGPSById(@PathVariable Long id) {
 		return new ResponseEntity<GPS>(gpsService.findById(id), HttpStatus.OK);
+	}
+	
+	@GetMapping("/gps/latest")
+	public ResponseEntity<List<GPS>> findLatestGPS(@RequestParam(defaultValue = "0") Integer pageNo, 
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+		Sort defaultSort = new Sort(Direction.DESC, "id");
+		List<GPS> results = gpsService.findAllGPS(pageNo, pageSize, defaultSort);
+		return new ResponseEntity<List<GPS>>(results, HttpStatus.OK);
 	}
 }
