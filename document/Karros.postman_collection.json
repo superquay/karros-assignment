@@ -1,0 +1,80 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Karros",
+		"_postman_id": "4dddbc50-1b56-332d-7249-1f034b7edc61",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/gps/upload",
+			"request": {
+				"url": "http://localhost:8080/gps/upload",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"value": "",
+							"description": "",
+							"type": "file"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/gps/1",
+			"request": {
+				"url": "http://localhost:8080/gps/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/gps/latest?pageNo=1&pageSize=2",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/gps/latest?pageNo=1&pageSize=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"gps",
+						"latest"
+					],
+					"query": [
+						{
+							"key": "pageNo",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "pageSize",
+							"value": "2",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

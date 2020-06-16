@@ -1,0 +1,1 @@
+- Import Karros.postman_collection.json to have endpoints provide this application

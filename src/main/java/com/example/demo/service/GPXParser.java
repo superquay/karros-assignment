@@ -27,42 +27,37 @@ public class GPXParser {
 
 	private static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-	public static GPS parseGPXStream(InputStream is) {
+	public static GPS parseGPXStream(InputStream is) throws ParserConfigurationException, IOException, ParseException, SAXException {
 		DocumentBuilder builder;
 		GPS gps = null;
 		List<WayPoint> waypoints = new ArrayList<>();
-		try {
-			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document document = builder.parse(is);
-			Node firstChild = document.getFirstChild();
-			if (firstChild != null && GPXConstants.GPX_NODE.equals(firstChild.getNodeName())) {
-				gps = new GPS();
+		builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document document = builder.parse(is);
+		Node firstChild = document.getFirstChild();
+		if (firstChild != null && GPXConstants.GPX_NODE.equals(firstChild.getNodeName())) {
+			gps = new GPS();
 
-				// Map GPX version & creator
-				NamedNodeMap attrs = firstChild.getAttributes();
-				gps.setVersion(getNodeValueAsString(attrs.getNamedItem(GPXConstants.GPX_NODE_VERSION_NODE)));
-				gps.setCreator(getNodeValueAsString(attrs.getNamedItem(GPXConstants.GPX_NODE_CREATOR_NODE)));
+			// Map GPX version & creator
+			NamedNodeMap attrs = firstChild.getAttributes();
+			gps.setVersion(getNodeValueAsString(attrs.getNamedItem(GPXConstants.GPX_NODE_VERSION_NODE)));
+			gps.setCreator(getNodeValueAsString(attrs.getNamedItem(GPXConstants.GPX_NODE_CREATOR_NODE)));
 
-				NodeList nodes = firstChild.getChildNodes();
+			NodeList nodes = firstChild.getChildNodes();
 
-				for (int idx = 0; idx < nodes.getLength(); idx++) {
-					Node currentNode = nodes.item(idx);
-					if (GPXConstants.METADATA_NODE.equals(currentNode.getNodeName())) {
-						parseMetadataNode(gps, currentNode);
-					} else if (GPXConstants.WPT_NODE.equals(currentNode.getNodeName())) {
-						WayPoint wp = parseWaypoint(currentNode);
-						if (wp != null) {
-							waypoints.add(wp);
-						}
-					} else if (GPXConstants.TRACK_NODE.equals(currentNode.getNodeName())) {
-						gps.setTracks(parseTrack(currentNode));
+			for (int idx = 0; idx < nodes.getLength(); idx++) {
+				Node currentNode = nodes.item(idx);
+				if (GPXConstants.METADATA_NODE.equals(currentNode.getNodeName())) {
+					parseMetadataNode(gps, currentNode);
+				} else if (GPXConstants.WPT_NODE.equals(currentNode.getNodeName())) {
+					WayPoint wp = parseWaypoint(currentNode);
+					if (wp != null) {
+						waypoints.add(wp);
 					}
+				} else if (GPXConstants.TRACK_NODE.equals(currentNode.getNodeName())) {
+					gps.setTracks(parseTrack(currentNode));
 				}
-				gps.setWaypoints(waypoints);
 			}
-		} catch (ParserConfigurationException | SAXException | IOException | ParseException e) {
-			System.out.println("Parse exception");
-			e.printStackTrace();
+			gps.setWaypoints(waypoints);
 		}
 
 		return gps;

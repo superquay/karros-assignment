@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -52,10 +51,12 @@ public class GPSService {
 		return savedGPS;
 	}
 	
-	public GPS findById(Long id) {
-		GPS gps =  gpsRepository.findOne(id);
-		gps.setWaypoints(wayPointRepository.findByGpsId(id));
-		gps.setTracks(trackRepository.findByGpsId(id));
+	public GPS findByIdWithTracksAndWayPoints(Long id) {
+		GPS gps = gpsRepository.findOne(id);
+		if(gps != null) {
+			gps.setWaypoints(wayPointRepository.findByGpsId(id));
+			gps.setTracks(trackRepository.findByGpsId(id));
+		}
 		return gps;
 	}
 	
